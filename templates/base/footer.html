@@ -1,0 +1,160 @@
+<footer class="footer" id="about">
+    <div class="footer-container">
+        <div class="footer-grid">
+            <!-- About Section -->
+            <div class="footer-col">
+                <div class="footer-logo">
+                    
+                    <h3>Seva Setu</h3>
+                </div>
+                <p>Bridging communities through service and collaboration. Empowering individuals to create positive social impact together.</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li><a href="{% url 'add_problem' %}">Post Challenge</a></li>
+                    <li><a href="{% url 'solved_issues' %}">Solved Issues</a></li>
+                </ul>
+            </div>
+
+            <!-- Categories -->
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <ul>
+                    <li><a href="#">Daily Life Help</a></li>
+                    <li><a href="#">Emergency Help</a></li>
+                    <li><a href="#">Environment Issue</a></li>
+                    <li><a href="#">Infrastructure Issue</a></li>
+                    <li><a href="#">Safety & Security</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div class="footer-col">
+                <h4>Get in Touch</h4>
+                <ul>
+                    <li><a href="mailto:help@sevasetu.org">help@sevasetu.org</a></li>
+                    <li><a href="tel:+919876543210">+91 98765 XXXXX</a></li>
+                    <li>India</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p class="copyright">© {% now "Y" %} Seva Setu | Bridging Communities Together</p>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .footer {
+        background: #ffffff;
+        border-top: 1px solid #e8eaed;
+        padding: 48px 32px 24px;
+        margin-top: 48px;
+    }
+
+    .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+
+    .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .footer-logo-icon {
+        font-size: 28px;
+    }
+
+    .footer-logo h3 {
+        font-family: 'Sora', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1a6b3c;
+        margin: 0;
+    }
+
+    .footer-col p {
+        color: #6b7280;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .footer-col h4 {
+        font-family: 'Sora', sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 16px;
+    }
+
+    .footer-col ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-col ul li {
+        margin-bottom: 10px;
+    }
+
+    .footer-col ul li a {
+        color: #6b7280;
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: color 0.2s;
+    }
+
+    .footer-col ul li a:hover {
+        color: #1a6b3c;
+    }
+
+    .footer-col ul li {
+        color: #6b7280;
+        font-size: 0.85rem;
+    }
+
+    .footer-bottom {
+        padding-top: 24px;
+        border-top: 1px solid #e8eaed;
+        text-align: center;
+    }
+
+    .copyright {
+        color: #9ca3af;
+        font-size: 0.75rem;
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .footer {
+            padding: 40px 20px 20px;
+        }
+        .footer-grid {
+            gap: 30px;
+            text-align: center;
+        }
+        .footer-logo {
+            justify-content: center;
+        }
+        .footer-col h4 {
+            margin-bottom: 12px;
+        }
+    }
+</style>

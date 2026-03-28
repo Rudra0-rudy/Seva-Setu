@@ -1,0 +1,486 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block title %}
+{{ category.name }} | Social Impact & Community | SevaSetu
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    *, *::before, *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --green: #1a6b3c;
+        --green-mid: #22883f;
+        --green-lite: #e8f5ee;
+        --green-ring: rgba(26, 107, 60, 0.18);
+        --white: #ffffff;
+        --bg: #f3f4f6;
+        --card: #ffffff;
+        --border: #e8eaed;
+        --text: #111827;
+        --sub: #6b7280;
+        --muted: #9ca3af;
+        --danger: #ef4444;
+        --warn: #f59e0b;
+        --info: #3b82f6;
+        --success: #10b981;
+        --radius: 24px;
+        --radius-sm: 18px;
+        --shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+    }
+
+    body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+    }
+
+    /* Category Header */
+    .category-header-modern {
+        background: linear-gradient(135deg, var(--green-lite) 0%, var(--white) 100%);
+        border-radius: 32px;
+        margin: 24px 32px 32px 32px;
+        padding: 48px 40px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .category-header-modern::before {
+        content: "🌱";
+        font-size: 150px;
+        position: absolute;
+        bottom: -30px;
+        right: -30px;
+        opacity: 0.1;
+        pointer-events: none;
+    }
+
+    .category-header-modern h1 {
+        font-family: 'Sora', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--green);
+        margin-bottom: 16px;
+    }
+
+    .category-header-modern p {
+        color: var(--sub);
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Content Area */
+    .content-area {
+        margin: 0 32px 48px 32px;
+    }
+
+    .section-header {
+        margin-bottom: 28px;
+    }
+
+    .section-header h2 {
+        font-family: 'Sora', sans-serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 8px;
+    }
+
+    .section-header p {
+        color: var(--sub);
+        font-size: 0.95rem;
+    }
+
+    /* Problems Grid - Event Style Cards */
+    .problems-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .event-card {
+        background: var(--card);
+        border-radius: 28px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        cursor: pointer;
+    }
+
+    .event-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
+        border-color: var(--green-ring);
+    }
+
+    .event-date-area {
+        background: var(--green-lite);
+        min-width: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px 14px;
+        border-right: 1px solid rgba(0, 0, 0, 0.05);
+        gap: 12px;
+    }
+
+    .event-thumbnail {
+        width: 70px;
+        height: 70px;
+        border-radius: 20px;
+        object-fit: cover;
+        background: #e2e8f0;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        border: 2px solid white;
+    }
+
+    .event-day {
+        font-family: 'Sora', sans-serif;
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--green);
+        line-height: 1;
+    }
+
+    .event-month {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--green-mid);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 4px;
+    }
+
+    .event-time {
+        font-size: 11px;
+        font-weight: 500;
+        background: rgba(26, 107, 60, 0.12);
+        padding: 4px 12px;
+        border-radius: 40px;
+        color: var(--green);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .event-main {
+        flex: 1;
+        padding: 20px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .event-title {
+        font-family: 'Sora', sans-serif;
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.2px;
+        line-height: 1.3;
+    }
+
+    .event-description {
+        color: var(--sub);
+        font-size: 14px;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .event-meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin-top: 4px;
+        font-size: 13px;
+    }
+
+    .category-pill {
+        background: var(--green-lite);
+        padding: 4px 14px;
+        border-radius: 40px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--green);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 14px;
+        border-radius: 40px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-pending, .status-Pending {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    .status-in_progress, .status-in-progress, .status-In-Progress {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .status-resolved, .status-Resolved {
+        background: #d1fae5;
+        color: #059669;
+    }
+
+    .location-chip {
+        background: var(--bg);
+        padding: 4px 12px;
+        border-radius: 40px;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--sub);
+    }
+
+    .author-chip {
+        background: var(--bg);
+        padding: 4px 12px;
+        border-radius: 40px;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--sub);
+    }
+
+    .event-actions {
+        min-width: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        background: #fafbfc;
+        border-left: 1px solid var(--border);
+        padding: 20px 16px;
+    }
+
+    .view-detail-btn {
+        background: var(--green);
+        border: none;
+        border-radius: 40px;
+        padding: 10px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 100%;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+    .view-detail-btn:hover {
+        background: #155d33;
+        transform: translateY(-2px);
+    }
+
+    .created-date-small {
+        font-size: 11px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 6px;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: var(--card);
+        border-radius: 28px;
+        border: 1px solid var(--border);
+    }
+
+    .empty-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+    }
+
+    .empty-state p {
+        color: var(--sub);
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        background: var(--green);
+        color: white;
+        text-decoration: none;
+        border-radius: 40px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+        background: #155d33;
+        transform: translateY(-2px);
+    }
+
+    /* Responsive */
+    @media (max-width: 800px) {
+        .category-header-modern {
+            margin: 16px;
+            padding: 32px 24px;
+        }
+        .category-header-modern h1 {
+            font-size: 1.8rem;
+        }
+        .content-area {
+            margin: 0 16px 32px 16px;
+        }
+        .event-card {
+            flex-direction: column;
+        }
+        .event-date-area {
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-right: none;
+            border-bottom: 1px solid var(--border);
+            min-width: auto;
+        }
+        .event-thumbnail {
+            width: 55px;
+            height: 55px;
+        }
+        .event-actions {
+            border-left: none;
+            border-top: 1px solid var(--border);
+            flex-direction: row;
+            justify-content: space-around;
+            padding: 14px 20px;
+        }
+        .view-detail-btn {
+            width: auto;
+            padding: 8px 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Modern Category Header -->
+<section class="category-header-modern">
+    <h1> {{ category.name }} – Social Impact & Community</h1>
+    <p>Together we solve challenges that matter to our community</p>
+</section>
+
+<section class="content-area">
+    <div class="section-header">
+        <h2>Open Problems in {{ category.name }}</h2>
+        <p>Click on any card to view full details or help solve a challenge.</p>
+    </div>
+
+    {% if problems %}
+        <div class="problems-grid">
+            {% for p in problems %}
+                {% with created_date=p.created_at|localtime %}
+                    {% with day=created_date|date:"d" month_name=created_date|date:"M" time_display=created_date|date:"h:i A" %}
+                        <div class="event-card" data-problem-id="{{ p.id }}">
+                            <div class="event-date-area">
+                                {% if p.image %}
+                                    <img src="{{ p.image.url }}" class="event-thumbnail" alt="problem image">
+                                {% else %}
+                                    <img src="https://placehold.co/80x80/eef2f5/6c757d?text=Issue" class="event-thumbnail" alt="default">
+                                {% endif %}
+                                <div>
+                                    <div class="event-day">{{ day }}</div>
+                                    <div class="event-month">{{ month_name|upper }}</div>
+                                    <div class="event-time"><i class="far fa-clock"></i> {{ time_display }}</div>
+                                </div>
+                            </div>
+
+                            <div class="event-main">
+                                <div class="event-title">{{ p.title }}</div>
+                                <div class="event-description">{{ p.short_description|default:p.description|truncatechars:100 }}</div>
+                                
+                                <div class="event-meta-row">
+                                    <span class="category-pill"><i class="fas fa-folder"></i> {{ p.category.name }}</span>
+                                    {% if p.location %}
+                                        <span class="location-chip"><i class="fas fa-map-marker-alt"></i> {{ p.location }}</span>
+                                    {% endif %}
+                                    <span class="author-chip"><i class="fas fa-user"></i> {{ p.author.username }}</span>
+                                    <span class="status-pill status-{{ p.status|default:'pending'|lower|cut:' ' }}">
+                                        <i class="fas fa-sync-alt"></i> {{ p.get_status_display|default:"Pending" }}
+                                    </span>
+                                </div>
+
+                                <div class="created-date-small">
+                                    <i class="far fa-calendar-alt"></i> Posted: {{ created_date|date:"M d, Y" }}
+                                </div>
+                            </div>
+
+                            <div class="event-actions">
+                                <a href="{% url 'problem_detail' p.id %}" class="view-detail-btn">
+                                    <i class="fas fa-eye"></i> View Details
+                                </a>
+                            </div>
+                        </div>
+                    {% endwith %}
+                {% endwith %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No challenges posted in this category yet.</p>
+            <a href="{% url 'add_problem' %}" class="btn-primary">
+                <i class="fas fa-plus-circle"></i> Be the first to post
+            </a>
+        </div>
+    {% endif %}
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Make entire card clickable
+        const cards = document.querySelectorAll('.event-card');
+        cards.forEach(card => {
+            const problemId = card.getAttribute('data-problem-id');
+            card.addEventListener('click', (e) => {
+                // Don't trigger if clicking on the view details button (already has its own link)
+                if(e.target.closest('.view-detail-btn')) return;
+                if(problemId) window.location.href = `/problem/${problemId}/`;
+            });
+        });
+    });
+</script>
+{% endblock %}

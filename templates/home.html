@@ -1,0 +1,759 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Seva Setu | Bridge to Community Service{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --green: #1a6b3c;
+        --green-mid: #22883f;
+        --green-lite: #e8f5ee;
+        --green-ring: rgba(26, 107, 60, 0.18);
+        --white: #ffffff;
+        --bg: #f3f4f6;
+        --card: #ffffff;
+        --border: #e8eaed;
+        --text: #111827;
+        --sub: #6b7280;
+        --muted: #9ca3af;
+        --orange: #f59e0b;
+        --blue: #3b82f6;
+        --radius: 28px;
+        --shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+        --navbar-height: 80px;
+    }
+
+    body {
+        padding-top: var(--navbar-height);
+        background: var(--bg);
+    }
+
+    /* Hero Section */
+    .hero-modern {
+        background: linear-gradient(135deg, var(--green-lite) 0%, var(--white) 100%);
+        border-radius: 32px;
+        margin: 0 32px 40px 32px;
+        padding: 48px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-modern::before {
+        content: "\f2b5";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        font-size: 200px;
+        position: absolute;
+        bottom: -50px;
+        right: -30px;
+        opacity: 0.08;
+        pointer-events: none;
+    }
+
+    .hero-content {
+        flex: 1;
+        min-width: 280px;
+    }
+
+    .hero-badge {
+        background: rgba(26, 107, 60, 0.12);
+        padding: 6px 14px;
+        border-radius: 40px;
+        display: inline-block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--green);
+        margin-bottom: 20px;
+    }
+
+    .hero-content h1 {
+        font-family: 'Sora', sans-serif;
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: var(--text);
+        line-height: 1.2;
+        margin-bottom: 20px;
+    }
+
+    .hero-content h1 span {
+        color: var(--green);
+        position: relative;
+    }
+
+    .hero-content p {
+        color: var(--sub);
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 32px;
+        max-width: 550px;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 28px;
+        background: var(--green);
+        color: white;
+        text-decoration: none;
+        border-radius: 60px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(26, 107, 60, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(26, 107, 60, 0.4);
+        background: linear-gradient(135deg, #1d4ed8 0%, #06b6d4 100%);
+        color: #ffffff;
+    }
+
+    .btn-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        background: transparent;
+        border: 2px solid var(--green);
+        color: var(--green);
+        text-decoration: none;
+        border-radius: 60px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline:hover {
+        background: var(--green-lite);
+        transform: translateY(-2px);
+    }
+
+    .hero-stats-card {
+        background: var(--card);
+        border-radius: 28px;
+        padding: 28px 32px;
+        box-shadow: var(--shadow);
+        min-width: 260px;
+        text-align: center;
+        border: 1px solid var(--border);
+    }
+
+    .hero-stats-card h3 {
+        font-size: 0.9rem;
+        color: var(--sub);
+        margin-bottom: 12px;
+    }
+
+    .hero-stats-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--green);
+        font-family: 'Sora', sans-serif;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        margin: 0 32px 48px 32px;
+    }
+
+    .stat-item {
+        background: var(--card);
+        border-radius: 24px;
+        padding: 24px;
+        text-align: center;
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow);
+        border-color: var(--green-ring);
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 12px;
+    }
+
+    .stat-number {
+        font-family: 'Sora', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--green);
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: var(--sub);
+        margin-top: 4px;
+    }
+
+    /* Category Section */
+    .category-section {
+        margin: 0 32px 48px 32px;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .section-header h2 {
+        font-family: 'Sora', sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 12px;
+    }
+
+    .section-header h2 i {
+        color: var(--green);
+    }
+
+    .section-header p {
+        color: var(--sub);
+        font-size: 1rem;
+    }
+
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+    }
+
+    .category-card {
+        background: var(--card);
+        border-radius: 24px;
+        padding: 28px;
+        text-decoration: none;
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .category-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--green);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .category-card:hover::after {
+        transform: scaleX(1);
+    }
+
+    .category-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .category-icon {
+        font-size: 2.5rem;
+        background: var(--green-lite);
+        width: 65px;
+        height: 65px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .category-card h3 {
+        font-family: 'Sora', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 8px;
+    }
+
+    .category-desc {
+        color: var(--sub);
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: 16px;
+    }
+
+    .category-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+    }
+
+    .problem-count {
+        background: var(--bg);
+        padding: 4px 12px;
+        border-radius: 40px;
+        font-size: 0.75rem;
+        color: var(--green);
+        font-weight: 600;
+    }
+
+    .explore-link {
+        color: var(--green);
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: gap 0.2s;
+    }
+
+    .category-card:hover .explore-link {
+        gap: 10px;
+    }
+
+    /* Two Column Layout */
+    .two-column {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 32px;
+        margin: 0 32px 48px 32px;
+    }
+
+    /* Left Column */
+    .featured-card {
+        background: var(--card);
+        border-radius: 28px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
+
+    .featured-header {
+        background: linear-gradient(135deg, var(--green-lite), var(--white));
+        padding: 32px;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .featured-header h3 {
+        font-family: 'Sora', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--green);
+        margin-bottom: 12px;
+    }
+
+    .featured-header p {
+        color: var(--sub);
+    }
+
+    .featured-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1px;
+        background: var(--border);
+    }
+
+    .featured-item {
+        background: var(--card);
+        padding: 28px 24px;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+
+    .featured-item:hover {
+        background: var(--green-lite);
+    }
+
+    .featured-icon {
+        font-size: 2.2rem;
+        margin-bottom: 16px;
+    }
+
+    .featured-item h4 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .featured-item p {
+        color: var(--sub);
+        font-size: 0.85rem;
+        margin-bottom: 16px;
+    }
+
+    /* Right Column */
+    .right-column {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+    }
+
+    .info-card {
+        background: var(--card);
+        border-radius: 28px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
+
+    .info-card-header {
+        background: var(--bg);
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .info-card-header h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .info-list {
+        padding: 8px 20px;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        font-weight: 600;
+    }
+
+    .info-value {
+        color: var(--green);
+        font-weight: 600;
+    }
+
+    .tips-box {
+        background: var(--green-lite);
+        margin: 16px;
+        padding: 20px;
+        border-radius: 20px;
+        text-align: center;
+    }
+
+    .tips-box p {
+        color: var(--green);
+        font-weight: 600;
+        margin: 0;
+    }
+
+    /* Donate Card */
+    .donate-card {
+        background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+        border-radius: 28px;
+        padding: 32px 28px;
+        text-align: center;
+        color: white;
+    }
+
+    .donate-card h3 {
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+    }
+
+    .donate-card p {
+        font-size: 0.85rem;
+        opacity: 0.9;
+        margin-bottom: 24px;
+        line-height: 1.5;
+    }
+
+    .donate-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        color: var(--green);
+        padding: 12px 28px;
+        border-radius: 60px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+    .donate-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Subscribe Section */
+    .subscribe-section {
+        background: var(--card);
+        border-radius: 32px;
+        margin: 0 32px 48px 32px;
+        padding: 48px;
+        text-align: center;
+        border: 1px solid var(--border);
+    }
+
+    .subscribe-section h3 {
+        font-family: 'Sora', sans-serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 12px;
+    }
+
+    .subscribe-section p {
+        color: var(--sub);
+        margin-bottom: 28px;
+    }
+
+    .subscribe-form {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .subscribe-input {
+        padding: 14px 24px;
+        border: 2px solid var(--border);
+        border-radius: 60px;
+        width: 320px;
+        font-family: inherit;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .subscribe-input:focus {
+        outline: none;
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px var(--green-ring);
+    }
+
+    .subscribe-btn {
+        background: var(--green);
+        color: white;
+        border: none;
+        padding: 14px 32px;
+        border-radius: 60px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .subscribe-btn:hover {
+        background: var(--green-mid);
+        transform: translateY(-2px);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .two-column {
+            grid-template-columns: 1fr;
+        }
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        body {
+            padding-top: 70px;
+        }
+        .hero-modern {
+            flex-direction: column;
+            text-align: center;
+            margin: 0 16px 32px 16px;
+            padding: 32px 24px;
+        }
+        .hero-content h1 {
+            font-size: 1.8rem;
+        }
+        .hero-buttons {
+            justify-content: center;
+        }
+        .stats-grid {
+            margin: 0 16px 32px 16px;
+            gap: 16px;
+        }
+        .category-section {
+            margin: 0 16px 32px 16px;
+        }
+        .two-column {
+            margin: 0 16px 32px 16px;
+        }
+        .subscribe-section {
+            margin: 0 16px 32px 16px;
+            padding: 32px 24px;
+        }
+        .subscribe-input {
+            width: 100%;
+        }
+        .featured-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-modern">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fas fa-heart"></i> Seva Setu — Bridge to Service
+        </div>
+        <h1>Create Impact.<br>Help Others.<br><span>Build Community Together</span> !!</h1>
+        <p>Share your challenges, collaborate on solutions, and create positive social impact as a community. Together, we make a difference.</p>
+        <div class="hero-buttons">
+            {% if user.is_authenticated %}
+                <a href="{% url 'add_problem' %}" class="btn-primary">
+                     Post Your Challenge
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Login to Post
+                </a>
+            {% endif %}
+            <a href="#categories" class="btn-outline">
+                Explore Categories
+            </a>
+        </div>
+    </div>
+    <div class="hero-stats-card">
+        <h3><i class="fas fa-users"></i> Active Community</h3>
+        <div class="hero-stats-number">{{ total_users|default:0 }}</div>
+        <p style="font-size: 0.75rem; margin-top: 8px;">members helping each other</p>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-grid">
+    <div class="stat-item">
+        <div class="stat-icon"></div>
+        <div class="stat-number">{{ categories|length }}</div>
+        <div class="stat-label">Categories</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-icon"></div>
+        <div class="stat-number">{{ open_count }}</div>
+        <div class="stat-label">Open Problems</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-icon"></div>
+        <div class="stat-number">{{ total_solved }}</div>
+        <div class="stat-label">Solved</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-icon"></div>
+        <div class="stat-number">{{ total_users }}</div>
+        <div class="stat-label">Active Users</div>
+    </div>
+</section>
+
+<!-- Category Section -->
+<section class="category-section" id="categories">
+    <div class="section-header">
+        <h2><i class="fas fa-folder-tree"></i> Community Challenges by Category</h2>
+        <p>Select a category to explore problems, share solutions, and make a difference in your community.</p>
+    </div>
+
+    <div class="category-grid">
+        {% for cat in categories %}
+        <a href="{% url 'category_problems' cat.id %}" class="category-card">
+            <div class="category-icon">
+                {% if cat.name|lower == "daily life help" %}<svg xmlns="http://www.w3.org/2000/svg" height="34px" viewBox="0 -960 960 960" width="34px" fill="black"><path d="M480-427ZM240-120q-50 0-85-35t-35-85v-240q0-24 9-46t26-39l240-240q17-18 39.5-26.5T480-840q23 0 45 8.5t40 26.5l240 240q17 17 26 39t9 46v240q0 50-35 85t-85 35H240Zm0-80h480q17 0 28.5-11.5T760-240v-240q0-8-3-15t-9-13L595-662l-59 58 144 144v180H280v-180l258-258-30-30q-8-8-15.5-10t-12.5-2q-5 0-12.5 2T452-748L212-508q-6 6-9 13t-3 15v240q0 17 11.5 28.5T240-200Zm120-160h240v-67L480-547 360-427v67Z"/></svg>
+                {% elif cat.name|lower == "emergency help" %}<svg xmlns="http://www.w3.org/2000/svg" height="34px" viewBox="0 -960 960 960" width="34px" fill="black"><path d="M410-120v-238L204-239l-70-121 206-120-206-119 70-121 206 119v-239h140v239l206-119 70 121-206 119 206 120-70 121-206-119v238H410Z"/></svg>
+                {% elif cat.name|lower == "environment issue" %}<svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000"><path d="M295.33-80v-152.67H0l177.33-262.66h-88L360-880l120 170.67L600-880l270.67 384.67h-87.34L960-232.67H665.33V-80h-130v-152.67h-110V-80h-130Zm381-219.33h158.34L657-562h81.67L600-759.33 523-649l107.67 153.67h-87.34l133 196Zm-550.33 0h468.67L417-562h81.67L360-759.33 221.33-562h82.34L126-299.33Zm0 0h177.67-82.34 277.34H417h177.67H126Zm550.33 0h-133 87.34H523h215.67H657h177.67-158.34Zm-141 66.66h130-130Zm185.67 0Z"/></svg>
+                {% elif cat.name|lower == "infrastructure issue" %}<svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000"><path d="M42-120v-98.67q0-33.66 16.33-58.33 16.34-24.67 45.67-39 53-26 115.33-43.33 62.34-17.34 140-17.34 77.67 0 140 17.34Q561.67-342 614.67-316q29.33 14.33 45.66 39 16.34 24.67 16.34 58.33V-120H42Zm66.67-66.67H610v-32q0-13.66-7.5-23Q595-251 584-256q-40.67-18.67-94.83-36.33Q435-310 359.33-310q-75.66 0-129.83 17.67-54.17 17.66-94.83 36.33-11 5-18.5 14.33-7.5 9.34-7.5 23v32Zm141-287.66Q206-518.67 206-583.33h-10q-8.33 0-14.17-5.84Q176-595 176-603.33q0-8.34 5.83-14.17 5.84-5.83 14.17-5.83h10q0-41.67 20.67-75 20.66-33.34 54-53.67v38.67q0 7 4.83 11.83t11.83 4.83q7.67 0 12.17-4.83t4.5-11.83V-766q8.33-2.33 21-3.83t25-1.5q12.33 0 25 1.5t21 3.83v52.67q0 7 4.5 11.83t12.17 4.83q7 0 11.83-4.83t4.83-11.83V-752q33.34 20.33 53.34 53.67 20 33.33 20 75h10q8.33 0 14.16 5.83 5.84 5.83 5.84 14.17 0 8.33-5.84 14.16-5.83 5.84-14.16 5.84h-10q0 64.66-43.67 109Q425.33-430 359.33-430t-109.66-44.33Zm172.5-46.84Q446-545.67 446-583.33H272.67q0 37.66 23.83 62.16t62.83 24.5q39 0 62.84-24.5Zm238.5 160.5L657.33-390q-6.66-3.33-13.5-7.5-6.83-4.17-12.5-9.17L604.67-394l-21.34-33.33L608-446.67q-1.33-3.66-1.33-7v-14q0-3.33 1.33-7L583.33-494l21.34-33.33 26.66 12.66q6-4.66 12.67-9 6.67-4.33 13.33-7.66l3.34-29.34h40l3.33 29.34q6.67 3.33 13.33 7.66 6.67 4.34 12.67 9l26.67-12.66L778-494l-24.67 19.33q1.34 3.67 1.34 7v14q0 3.34-1.34 7L778-427.33 756.67-394 730-406.67q-5.67 5-12.5 9.17T704-390l-3.33 29.33h-40Zm45-75Q716-446 716-460.67q0-14.66-10.33-25-10.34-10.33-25-10.33-14.67 0-25 10.33-10.34 10.34-10.34 25 0 14.67 10.34 25 10.33 10.34 25 10.34 14.66 0 25-10.34ZM763.33-572l-8.66-37.33Q745-613 735.5-619.17q-9.5-6.16-16.17-13.5L676-617.33l-22.67-39.34L688-685.33q-2-5-3-10T684-706q0-5.67 1-10.67t3-10l-34.67-28.66L676-794.67l43.33 15.34q6.67-7.34 16.17-13.84 9.5-6.5 19.17-9.5l8.66-37.33h44l8.67 37.33q9.67 3 19.17 9.5 9.5 6.5 16.16 13.84l43.34-15.34 22.66 39.34-34.66 28.66q2 5 3 10t1 10.67q0 5.67-1 10.67t-3 10l34.66 28.66-22.66 39.34-43.34-15.34q-6.66 7.34-16.16 13.5-9.5 6.17-19.17 9.84L807.33-572h-44Zm61.5-94.5q15.84-15.83 15.84-39.5t-15.84-39.5q-15.83-15.83-39.5-15.83-23.66 0-39.5 15.83Q730-729.67 730-706t15.83 39.5q15.84 15.83 39.5 15.83 23.67 0 39.5-15.83Zm-465.5 479.83Z"/></svg>
+                {% elif cat.name|lower == "lost & found" %}<svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000"><path d="M792-120.67 532.67-380q-30 25.33-69.67 39.67Q423.33-326 378.67-326q-108.34 0-183.5-75.17Q120-476.33 120-583.33t75.17-182.17q75.16-75.17 182.83-75.17 107 0 181.83 75.17 74.84 75.17 74.84 182.17 0 43.33-14 83-14 39.66-40.67 73l260 258.66-48 48Zm-414-272q79 0 134.5-55.83T568-583.33q0-79-55.5-134.84Q457-774 378-774q-79.67 0-135.5 55.83-55.83 55.84-55.83 134.84T242.5-448.5q55.83 55.83 135.5 55.83Z"/></svg>
+                {% elif cat.name|lower == "other issues" %}<svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000"><path d="M646.33-211.67q9-9 9-21t-9-21q-9-9-21-9t-21 9q-9 9-9 21t9 21q9 9 21 9t21-9Zm103.34 0q9-9 9-21t-9-21q-9-9-21-9t-21 9q-9 9-9 21t9 21q9 9 21 9t21-9Zm103.33 0q9-9 9-21t-9-21q-9-9-21-9t-21 9q-9 9-9 21t9 21q9 9 21 9t21-9ZM186.67-120q-27.5 0-47.09-19.58Q120-159.17 120-186.67v-586.66q0-27.5 19.58-47.09Q159.17-840 186.67-840h586.66q27.5 0 47.09 19.58Q840-800.83 840-773.33v308.66q-15.67-8.33-32.67-13.83t-34-8.5v-286.33H186.67v586.66h286.66q3.67 18 9.19 34.79 5.51 16.78 13.15 31.88h-309Zm0-111.33v44.66-586.66V-487v-3.67V-231.33ZM280-280h195q3.67-17.67 9.17-34.33 5.5-16.67 13.5-32.34H280V-280Zm0-166.67h310.67q20-14.66 41.83-24.33 21.83-9.67 47.5-14.67v-27.66H280v66.66Zm0-166.66h400V-680H280v66.67ZM728.33-40.67q-79.33 0-135.5-56.5-56.16-56.5-56.16-134.83 0-79.96 56.16-136.31 56.16-56.36 135.84-56.36 79 0 135.5 56.36 56.5 56.35 56.5 136.31 0 78.33-56.5 134.83-56.5 56.5-135.84 56.5Z"/></svg>
+                {% elif cat.name|lower == "safety & security" %}<svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000"><path d="M480-80q-139.67-35-229.83-161.5Q160-368 160-520v-240l320-120 320 120v240q0 152-90.17 278.5Q619.67-115 480-80Zm0-69.33q103-33.34 171-125.17T730.67-480H480v-328.33l-253.33 94.66V-520q0 11.67.33 19.67.33 8 2.33 20.33H480v330.67Z"/></svg>
+                {% elif cat.name|lower == "utility problems" %}<svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000"><path d="M748.33-82.5q-5.66-2.17-11-7.5L508-319.33q-5.33-5.34-7.5-11-2.17-5.67-2.17-12.34 0-6.66 2.17-12.33t7.5-11l85-85q5.33-5.33 11-7.5t12.33-2.17q6.67 0 12.34 2.17 5.66 2.17 11 7.5L869-221.67q5.33 5.34 7.5 11 2.17 5.67 2.17 12.34 0 6.66-2.17 12.33t-7.5 11l-85 85q-5.33 5.33-11 7.5t-12.33 2.17q-6.67 0-12.34-2.17Zm12.34-77.5L799-198.33 616.67-380.67l-38.34 38.34L760.67-160ZM185.5-82.33Q179.33-84.67 174-90l-84-84q-5.33-5.33-7.67-11.5Q80-191.67 80-198.33q0-6.67 2.33-12.34 2.34-5.66 7.67-11l220.67-220.66h85L432.33-479 260.67-650.67h-57L80-774.33 183.67-878l123.66 123.67v57L479-525.67 604.33-651l-59-59 56-56h-113L467-787.33 599.67-920 621-898.67v113l56-56 160 160q15.67 15.67 24.33 35.84Q870-625.67 870-603q0 21.33-7.33 41-7.34 19.67-21 35.33l-85-85-56 56L652-604.33 442.33-394.67v84L221.67-90q-5.34 5.33-11 7.67Q205-80 198.33-80q-6.66 0-12.83-2.33ZM198.33-160l190-190v-38.33H350l-190 190L198.33-160Zm0 0L160-198.33l19.67 18.66L198.33-160Zm562.34 0L799-198.33 760.67-160Z"/></svg>
+                {% else %}<svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000"><path d="M480-619.33 349.33-750 480-880.67 610.67-750 480-619.33ZM40-160v-160q0-30.67 21.5-52t51.83-21.33H251q18 0 34.33 9 16.34 9 27.34 24.66 29 41 73.16 63.67Q430-273.33 480-273.33q50.33 0 94.5-22.67t73.5-63.67q11.67-15.66 27.5-24.66t33.5-9h137.67q30.66 0 52 21.33Q920-350.67 920-320v160H653.33v-109.67q-35.66 30.34-80.16 46.67-44.5 16.33-93.17 16.33-48.33 0-92.67-16.5Q343-239.67 306.67-270v110H40Zm120-293.33q-46.67 0-80-33.34-33.33-33.33-33.33-80 0-47.66 33.33-80.5Q113.33-680 160-680q47.67 0 80.5 32.83 32.83 32.84 32.83 80.5 0 46.67-32.83 80-32.83 33.34-80.5 33.34Zm640 0q-46.67 0-80-33.34-33.33-33.33-33.33-80 0-47.66 33.33-80.5Q753.33-680 800-680q47.67 0 80.5 32.83 32.83 32.84 32.83 80.5 0 46.67-32.83 80-32.83 33.34-80.5 33.34Z"/></svg>{% endif %}
+            </div>
+            <h3>{{ cat.name }}</h3>
+            <div class="category-desc">
+                {% if cat.name|lower == "daily life help" %}
+                    Everyday challenges in routine life — grocery, elderly care, transportation
+                {% elif cat.name|lower == "emergency help" %}
+                    Urgent situations requiring immediate attention and quick response
+                {% elif cat.name|lower == "environment issue" %}
+                    Environmental concerns — pollution, waste, conservation, tree plantation
+                {% elif cat.name|lower == "infrastructure issue" %}
+                    Roads, street lights, drainage, public facilities, civic amenities
+                {% elif cat.name|lower == "lost & found" %}
+                    Lost pets, wallets, phones, keys — help reunite belongings
+                {% elif cat.name|lower == "other issues" %}
+                    General community concerns, feedback, and volunteer opportunities
+                {% elif cat.name|lower == "safety & security" %}
+                    Community safety, neighborhood watch, crime prevention
+                {% elif cat.name|lower == "utility problems" %}
+                    Water, electricity, gas, internet — essential service issues
+                {% else %}
+                    Community challenges and concerns in this category
+                {% endif %}
+            </div>
+            <div class="category-meta">
+                <span class="problem-count"><i class="fas fa-tasks"></i> {{ cat.problem_count }} Problems</span>
+                <span class="explore-link">Explore <i class="fas fa-arrow-right"></i></span>
+            </div>
+        </a>
+        {% empty %}
+        <div style="text-align: center; padding: 60px; background: var(--card); border-radius: 28px;">
+            <p>No categories available yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+
+<!-- Donate Section -->
+<div class="subscribe-section">   
+    <h3>Help Us Better Serve You</h3>
+    <p>Seva Setu provides all services and programming to the community through your support. Click the button below to donate any amount you wish on a one-time or monthly recurring basis.</p>
+    <a href="#" class="donate-btn" style="display: inline-flex;">
+        <i class="fas fa-hand-holding-heart"></i> Donate Today
+    </a>
+</div>
+
+<!-- Subscribe Section -->
+<div class="subscribe-section" style="background: linear-gradient(135deg, var(--green-lite), var(--white));">
+    <h3>Subscribe Now to Receive Updates!</h3>
+    <p>As always, the best way to keep in touch is to join our mailing list.</p>
+    <form class="subscribe-form" method="POST" action="#">
+        {% csrf_token %}
+        <input type="email" class="subscribe-input" placeholder="Enter your email address" required>
+        <button type="submit" class="subscribe-btn">Subscribe</button>
+    </form>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+{% endblock extra_js %}

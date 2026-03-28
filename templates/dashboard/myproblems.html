@@ -1,0 +1,1008 @@
+{% load static %}
+{% load tz %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Problems | SevaSetu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green: #1a6b3c;
+            --green-mid: #22883f;
+            --green-lite: #e8f5ee;
+            --green-ring: rgba(26, 107, 60, 0.18);
+            --white: #ffffff;
+            --bg: #f3f4f6;
+            --card: #ffffff;
+            --border: #e8eaed;
+            --text: #111827;
+            --sub: #6b7280;
+            --muted: #9ca3af;
+            --danger: #ef4444;
+            --warn: #f59e0b;
+            --info: #3b82f6;
+            --success: #10b981;
+            --radius: 24px;
+            --radius-sm: 18px;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 260px;
+            min-height: 100vh;
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 28px 18px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 36px;
+            padding: 0 8px;
+        }
+
+        .sidebar-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--green);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+        }
+
+        .sidebar-logo-text {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--text);
+        }
+
+        .sidebar-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 12px 24px;
+            border-radius: var(--radius-sm);
+            background: var(--green-lite);
+            margin-bottom: 28px;
+        }
+
+        .avatar-ring {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 3px solid var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-username {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text);
+        }
+
+        .sidebar-role {
+            font-size: 12px;
+            color: var(--sub);
+            margin-top: 3px;
+        }
+
+        .nav-section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 0 10px;
+            margin-bottom: 8px;
+            margin-top: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--sub);
+            transition: all 0.2s ease;
+            margin-bottom: 3px;
+        }
+
+        .nav-link:hover {
+            background: var(--green-lite);
+            color: var(--green);
+        }
+
+        .nav-link.active {
+            background: var(--green);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .nav-link .icon {
+            font-size: 16px;
+        }
+
+        .nav-link.logout-link {
+            color: var(--danger);
+            margin-top: 8px;
+        }
+
+        .nav-link.logout-link:hover {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* Main area */
+        .main {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .search-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 9px 16px;
+            width: 280px;
+        }
+
+        .search-wrap input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 14px;
+            color: var(--text);
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .search-wrap input::placeholder {
+            color: var(--muted);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        .topbar-icon-btn:hover {
+            background: var(--green-lite);
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 16px;
+            height: 16px;
+            background: var(--danger);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topbar-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--green-lite);
+            border: 2px solid var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .topbar-user-info strong {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            display: block;
+        }
+
+        .topbar-user-info span {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .content {
+            padding: 28px 32px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-header h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .page-header p {
+            color: var(--sub);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--green);
+            color: white;
+            border: none;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #155d33;
+        }
+
+        .btn-outline {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--white);
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        /* Stat cards */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 42px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border-radius: var(--radius-sm);
+            padding: 24px 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .stat-number {
+            font-family: 'Sora', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--green);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--sub);
+            font-weight: 500;
+        }
+
+        /* Event-style cards */
+        .problems-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .event-card {
+            background: var(--card);
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            cursor: pointer;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
+            border-color: var(--green-ring);
+        }
+
+        .event-date-area {
+            background: var(--green-lite);
+            min-width: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px 14px;
+            border-right: 1px solid rgba(0, 0, 0, 0.05);
+            gap: 12px;
+        }
+
+        .event-thumbnail {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            object-fit: cover;
+            background: #e2e8f0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            border: 2px solid white;
+        }
+
+        .event-day {
+            font-family: 'Sora', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--green);
+            line-height: 1;
+        }
+
+        .event-month {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--green-mid);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .event-time {
+            font-size: 11px;
+            font-weight: 500;
+            background: rgba(26, 107, 60, 0.12);
+            padding: 4px 12px;
+            border-radius: 40px;
+            color: var(--green);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .event-main {
+            flex: 1;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .event-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.2px;
+            line-height: 1.3;
+        }
+
+        .event-description {
+            color: var(--sub);
+            font-size: 14px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .event-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            margin-top: 4px;
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        .event-meta-row i {
+            width: 16px;
+            color: var(--green);
+            margin-right: 4px;
+        }
+
+        .category-pill {
+            background: var(--green-lite);
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--green);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-Pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-In-Progress {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .status-Resolved {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .location-chip {
+            background: var(--bg);
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--sub);
+        }
+
+        .event-actions {
+            min-width: 130px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            background: #fafbfc;
+            border-left: 1px solid var(--border);
+            padding: 20px 16px;
+        }
+
+        .delete-action-btn {
+            background: none;
+            border: 1.5px solid #fee2e2;
+            background: #fff;
+            border-radius: 999px;
+            padding: 8px 18px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--danger);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .delete-action-btn:hover {
+            background: #fee2e2;
+            border-color: var(--danger);
+        }
+
+        .view-detail {
+            background: transparent;
+            border: 1.5px solid var(--border);
+            border-radius: 999px;
+            padding: 8px 18px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .view-detail:hover {
+            background: var(--green-lite);
+            border-color: var(--green);
+        }
+
+        .created-date-small {
+            font-size: 11px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 800px) {
+            .event-card {
+                flex-direction: column;
+            }
+            .event-date-area {
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 14px 20px;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                min-width: auto;
+            }
+            .event-thumbnail {
+                width: 55px;
+                height: 55px;
+            }
+            .event-actions {
+                border-left: none;
+                border-top: 1px solid var(--border);
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 14px 20px;
+            }
+            .delete-action-btn, .view-detail {
+                width: auto;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .footer {
+            background: var(--white);
+            border-top: 1px solid var(--border);
+            padding: 32px;
+            margin-top: auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 28px;
+            margin-bottom: 24px;
+        }
+
+        .footer h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 10px;
+        }
+
+        .footer ul {
+            list-style: none;
+        }
+
+        .footer li {
+            font-size: 13px;
+            color: var(--sub);
+            margin-bottom: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+            padding-top: 18px;
+        }
+
+        #notif-popup {
+            position: absolute;
+            z-index: 200;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-lg);
+            width: 340px;
+            margin-top: 8px;
+        }
+
+        .notification-list {
+            list-style: none;
+            padding: 8px;
+        }
+
+        .notification-item {
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .notification-item.unread {
+            background: var(--green-lite);
+            border-left: 3px solid var(--green);
+        }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            
+            <span class="sidebar-logo-text">SevaSetu</span>
+        </div>
+        <div class="sidebar-profile">
+            <div class="avatar-ring"><svg xmlns="http://www.w3.org/2000/svg" height="34px" viewBox="0 -960 960 960" width="34px" fill="#000000"><path d="M367-527q-47-47-47-113t47-113q47-47 113-47t113 47q47 47 47 113t-47 113q-47 47-113 47t-113-47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm296.5-343.5Q560-607 560-640t-23.5-56.5Q513-720 480-720t-56.5 23.5Q400-673 400-640t23.5 56.5Q447-560 480-560t56.5-23.5ZM480-640Zm0 400Z"/></svg></div>
+            <div class="sidebar-username">{{ request.user.username }}</div>
+            <div class="sidebar-role">Community Member</div>
+        </div>
+        <div class="nav-section-label">Menu</div>
+        <a href="{% url 'home' %}" class="nav-link"><span class="icon"><i class="fas fa-home"></i></span> Home</a>
+        <a href="{% url 'dashboard' %}" class="nav-link"><span class="icon"><i class="fas fa-chart-bar"></i></span> Dashboard</a>
+        <a href="{% url 'solved_issues' %}" class="nav-link"><span class="icon"><i class="fas fa-check-circle"></i></span> Solved Issues</a>
+        <a href="{% url 'about' %}" class="nav-link"><span class="icon"><i class="fas fa-info-circle"></i></span> About</a>
+        <a href="{% url 'myproblems' %}" class="nav-link active"><span class="icon"><i class="fas fa-envelope"></i></span> My Problems</a>
+        <div class="nav-section-label" style="margin-top:16px;">General</div>
+        <a href="{% url 'logout' %}" class="nav-link logout-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><span class="icon"><i class="fas fa-sign-out-alt"></i></span> Logout</a>
+        <form id="logout-form" method="POST" action="{% url 'logout' %}" style="display:none;">{% csrf_token %}</form>
+    </aside>
+
+    <div class="main">
+        <div class="topbar">
+            <div class="search-wrap">
+                <span class="search-icon"><i class="fas fa-search"></i></span>
+                <input type="text" id="searchProblems" placeholder="Search your problems...">
+            </div>
+            <div class="topbar-right">
+                <div style="position:relative;">
+                    <button class="topbar-icon-btn" id="dashboard-notif-btn"><i class="fas fa-bell"></i><span id="unread-count" class="notif-badge">{{ unread_notifications_count|default:"0" }}</span></button>
+                    <div id="notif-popup" style="display:none;">
+                        <ul id="notification-list" class="notification-list">
+                            {% if notifications %}
+                                {% for n in notifications %}
+                                    <li class="notification-item {% if not n.is_read %}unread{% endif %}">
+                                        {% if n.problem %}
+                                            <a href="{% url 'problem_detail' n.problem.id %}">{{ n.problem.title|default:n.message }}</a>
+                                        {% else %}
+                                            <a href="{% url 'notification_detail' n.id %}">{{ n.message }}</a>
+                                        {% endif %}
+                                        <br><small>{{ n.created_at|date:"d M Y, H:i" }}</small>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <li>No notifications</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="topbar-user">
+                    <div class="topbar-avatar"><i class="fas fa-user"></i></div>
+                    <div class="topbar-user-info">
+                        <strong>{{ request.user.username }}</strong>
+                        <span>Hackathon Member</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="page-header">
+                <div>
+                    <h1>My Problems</h1>
+                    <p>All problems reported by you — track their status and updates.</p>
+                </div>
+                <div class="header-actions">
+                    <a href="{% url 'add_problem' %}" class="btn-primary">➕ Create New Problem</a>
+                </div>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat-card">
+                    
+                    <div class="stat-number">{{ category_counts|default:"0" }}</div>
+                    <div class="stat-label">Total Categories</div>
+                </div>
+                <div class="stat-card">
+                    
+                    <div class="stat-number">{{ problem_counts|default:"0" }}</div>
+                    <div class="stat-label">My Problems</div>
+                </div>
+                <div class="stat-card">
+                    
+                    <div class="stat-number">{{ solved_count }}</div>
+                    <div class="stat-label">Solved Issues</div>
+                </div>
+            </div>
+
+            <div class="section-header" style="margin-bottom: 20px;">
+                <h2> Your reported challenges</h2>
+            </div>
+
+            {% if user_problems %}
+                <div class="problems-grid" id="problemsGrid">
+                    {% for problem in user_problems %}
+                        {% with created_date=problem.created_at %}
+                            {% with day=created_date|date:"d" month_name=created_date|date:"M" time_display=created_date|date:"h:i A" %}
+                                <div class="event-card" data-title="{{ problem.problem_name|lower }}" data-desc="{{ problem.short_description|lower }}" data-category="{{ problem.category.name|lower }}">
+                                    <div class="event-date-area">
+                                        {% if problem.image %}
+                                            <img src="{{ problem.image.url }}" class="event-thumbnail" alt="thumbnail">
+                                        {% else %}
+                                            <img src="https://placehold.co/80x80/eef2f5/6c757d?text=Issue" class="event-thumbnail" alt="default">
+                                        {% endif %}
+                                        <div>
+                                            <div class="event-day">{{ day }}</div>
+                                            <div class="event-month">{{ month_name|upper }}</div>
+                                            <div class="event-time"><i class="far fa-clock"></i> {{ time_display }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="event-main">
+                                        <div class="event-title">{{ problem.problem_name }}</div>
+                                        <div class="event-description">{{ problem.short_description|default:"Community challenge awaiting attention." }}</div>
+                                        
+                                        <div class="event-meta-row">
+                                            <span class="category-pill"><i class="fas fa-folder"></i> {{ problem.category.name }}</span>
+                                            {% if problem.location %}
+                                                <span class="location-chip"><i class="fas fa-map-marker-alt"></i> {{ problem.location }}</span>
+                                            {% endif %}
+                                            <span class="status-pill status-{{ problem.status|default:'Pending'|cut:' ' }}">
+                                                <i class="fas fa-sync-alt"></i> {{ problem.get_status_display|default:"Pending" }}
+                                            </span>
+                                        </div>
+
+                                        <div class="created-date-small">
+                                            <i class="far fa-calendar-alt"></i> Reported: {{ problem.created_at|date:"M d, Y" }}
+                                        </div>
+                                    </div>
+
+                                    <div class="event-actions">
+                                        <form action="{% url 'delete_problem' problem.id %}" method="POST" onsubmit="return confirm('Are you sure you want to delete this problem?');" style="width:100%;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="delete-action-btn"><i class="fas fa-trash-alt"></i> Delete</button>
+                                        </form>
+                                        <button class="view-detail" data-problem-id="{{ problem.id }}"><i class="fas fa-eye"></i> View details</button>
+                                    </div>
+                                </div>
+                            {% endwith %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon" style="font-size: 64px;"><i class="fas fa-inbox"></i></div>
+                    <p>You haven't reported any problems yet.</p>
+                    <a href="{% url 'add_problem' %}" class="btn-primary" style="margin-top: 20px; display: inline-flex;">➕ Create Your First Problem</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <footer class="footer">
+            <div class="footer-grid">
+                <div>
+                    <h4>SevaSetu</h4>
+                    <ul><li>Empowering communities</li><li>Report & resolve issues</li></ul>
+                </div>
+                <div>
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="{% url 'home' %}" style="color:var(--sub);">Home</a></li>
+                        <li><a href="{% url 'dashboard' %}" style="color:var(--sub);">Dashboard</a></li>
+                        <li><a href="{% url 'about' %}" style="color:var(--sub);">About</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Support</h4>
+                    <ul><li>help@sevasetu.com</li><li>+1 (555) 123-4567</li></ul>
+                </div>
+            </div>
+            <div class="copyright">&copy; {% now "Y" %} SevaSetu. All rights reserved.</div>
+        </footer>
+    </div>
+</div>
+
+<script>
+    function toggleNotificationPopup() {
+        const popup = document.getElementById('notif-popup');
+        if(popup) popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+    }
+    
+    function refreshNotifications() {
+        fetch("{% url 'notifications_json' %}")
+            .then(res => res.json())
+            .then(data => {
+                const badge = document.getElementById('unread-count');
+                const list = document.getElementById('notification-list');
+                if (badge) {
+                    badge.textContent = data.unread_count || 0;
+                    badge.style.display = data.unread_count > 0 ? 'flex' : 'none';
+                }
+                if (list && data.notifications) {
+                    if (data.notifications.length === 0) { 
+                        list.innerHTML = '<li class="notification-item">No notifications yet</li>'; 
+                        return; 
+                    }
+                    list.innerHTML = data.notifications.map(n => {
+                        const cls = n.is_read ? '' : 'unread';
+                        const link = n.problem_id ? `/problem/${n.problem_id}/` : `/accounts/dashboard/notifications/${n.id}/`;
+                        const title = n.problem_title || n.message;
+                        return `<li class="notification-item ${cls}"><a href="${link}">${title}</a><br><small>${n.created_at}</small></li>`;
+                    }).join('');
+                }
+            }).catch(err => console.warn);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('dashboard-notif-btn');
+        if(btn) btn.addEventListener('click', toggleNotificationPopup);
+        refreshNotifications();
+        setInterval(refreshNotifications, 15000);
+        
+        document.addEventListener('click', e => {
+            const popup = document.getElementById('notif-popup');
+            const iconBtn = document.getElementById('dashboard-notif-btn');
+            if(popup && iconBtn && !iconBtn.contains(e.target) && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        const searchInput = document.getElementById('searchProblems');
+        if(searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const term = e.target.value.toLowerCase();
+                const cards = document.querySelectorAll('.event-card');
+                cards.forEach(card => {
+                    const title = card.getAttribute('data-title') || '';
+                    const desc = card.getAttribute('data-desc') || '';
+                    const cat = card.getAttribute('data-category') || '';
+                    if(title.includes(term) || desc.includes(term) || cat.includes(term)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        const viewBtns = document.querySelectorAll('.view-detail');
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const pid = btn.getAttribute('data-problem-id');
+                if(pid) window.location.href = `/problem/${pid}/`;
+            });
+        });
+        
+        {% if user_problems %}
+            const cards = document.querySelectorAll('.event-card');
+            {% for problem in user_problems %}
+                if(cards[{{ forloop.counter0 }}]) cards[{{ forloop.counter0 }}].setAttribute('data-pid', '{{ problem.id }}');
+            {% endfor %}
+            cards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if(e.target.closest('.delete-action-btn') || e.target.closest('.view-detail')) return;
+                    const pid = card.getAttribute('data-pid');
+                    if(pid) window.location.href = `/problem/${pid}/`;
+                });
+            });
+        {% endif %}
+    });
+</script>
+</body>
+</html>

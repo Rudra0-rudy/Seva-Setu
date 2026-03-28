@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h2>Create Account</h2>
+        <p class="auth-subtitle">Join CrowdHelper to report & track campus issues</p>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+
+            <button type="submit" class="auth-btn">
+                Sign Up
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

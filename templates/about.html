@@ -1,0 +1,112 @@
+﻿{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}About | Seva Setu{% endblock %}
+
+{% block content %}
+<section class="about-hero">
+    <div class="container">
+        <h1>About {{ app_name }}</h1>
+        <p>{{ tagline }}</p>
+    </div>
+</section>
+
+<section class="about-main">
+    <div class="container">
+        <h2>Our Mission</h2>
+        <p>{{ mission }}</p>
+
+        <h2>Our Vision</h2>
+        <p>{{ vision }}</p>
+
+        <h2>Core Values</h2>
+        <ul class="values-list">
+            {% for value in values %}
+                <li>{{ value }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>How it Works</h2>
+        <ol class="steps-list">
+            <li>Report a local issue with photo and location.</li>
+            <li>Community members choose tasks they can help with.</li>
+            <li>Track progress and celebrate resolved problems.</li>
+            <li>Share feedback and grow the network.</li>
+        </ol>
+
+        <h2>Contact</h2>
+        <p>For partnership, support or general inquiries, email <a href="mailto:help@sevasetu.org">help@sevasetu.org</a> or call <a href="tel:+919876543210">+91 98765 43210</a>.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, #e8f5ee 0%, #ffffff 100%);
+        padding: 70px 20px 50px;
+        text-align: center;
+        border-bottom: 1px solid #e8eaed;
+    }
+
+    .about-hero h1 {
+        color: #1a6b3c;
+        font-family: 'Sora', sans-serif;
+        font-size: 2.6rem;
+        margin-bottom: 16px;
+    }
+
+    .about-hero p {
+        color: #4b5563;
+        font-size: 1.1rem;
+        max-width: 760px;
+        margin: 0 auto;
+    }
+
+    .about-main {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 0 20px;
+        color: #374151;
+    }
+
+    .about-main h2 {
+        color: #166534;
+        margin-top: 32px;
+        font-size: 1.6rem;
+        font-family: 'Sora', sans-serif;
+    }
+
+    .about-main p,
+    .about-main li {
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-top: 12px;
+    }
+
+    .values-list,
+    .steps-list {
+        margin-top: 16px;
+        padding-left: 1.2rem;
+    }
+
+    .values-list li,
+    .steps-list li {
+        margin-bottom: 10px;
+    }
+
+    .values-list li::marker {
+        color: #1a6b3c;
+    }
+
+    .steps-list li {
+        margin-bottom: 12px;
+    }
+
+    .about-main a {
+        color: #1d4ed8;
+        text-decoration: none;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,778 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block title %}Problem Details | {{ problem.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    *, *::before, *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --green: #1a6b3c;
+        --green-mid: #22883f;
+        --green-lite: #e8f5ee;
+        --green-ring: rgba(26, 107, 60, 0.18);
+        --white: #ffffff;
+        --bg: #f3f4f6;
+        --card: #ffffff;
+        --border: #e8eaed;
+        --text: #111827;
+        --sub: #6b7280;
+        --muted: #9ca3af;
+        --danger: #ef4444;
+        --warn: #f59e0b;
+        --info: #3b82f6;
+        --success: #10b981;
+        --radius: 24px;
+        --radius-sm: 18px;
+        --shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+    }
+
+    body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+    }
+
+    /* Breadcrumbs */
+    .breadcrumbs {
+        margin: 24px 32px 16px 32px;
+        font-size: 14px;
+        color: var(--sub);
+    }
+
+    .breadcrumbs a {
+        color: var(--green);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .breadcrumbs a:hover {
+        text-decoration: underline;
+    }
+
+    .breadcrumbs span {
+        color: var(--muted);
+    }
+
+    /* Main Problem Card - Modern Event Style */
+    .problem-detail-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 32px 48px;
+    }
+
+    .problem-card-modern {
+        background: var(--card);
+        border-radius: 32px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+        margin-bottom: 32px;
+    }
+
+    .problem-card-modern:hover {
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* Hero Section with Image */
+    .problem-hero {
+        position: relative;
+        min-height: 280px;
+        background: linear-gradient(135deg, var(--green-lite) 0%, #d4ede0 100%);
+    }
+
+    .problem-hero.has-image {
+        padding: 0;
+    }
+
+    .hero-image {
+        width: 100%;
+        height: 320px;
+        object-fit: cover;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+        padding: 40px 32px 24px;
+    }
+
+    .hero-overlay h1 {
+        font-family: 'Sora', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 12px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        color: rgba(255,255,255,0.9);
+        font-size: 14px;
+    }
+
+    .hero-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .no-image-hero {
+        padding: 48px 32px;
+        text-align: center;
+    }
+
+    .no-image-hero h1 {
+        font-family: 'Sora', sans-serif;
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--green);
+        margin-bottom: 16px;
+    }
+
+    .no-image-hero .hero-meta {
+        justify-content: center;
+        color: var(--sub);
+    }
+
+    /* Status Badge */
+    .status-badge-large {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        padding: 8px 20px;
+        border-radius: 40px;
+        font-size: 14px;
+        font-weight: 700;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .status-badge-large.status-pending {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    .status-badge-large.status-in_progress, .status-badge-large.status-in-progress {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .status-badge-large.status-resolved {
+        background: #d1fae5;
+        color: #059669;
+    }
+
+    /* Content Sections */
+    .problem-content {
+        padding: 32px;
+    }
+
+    .description-section {
+        margin-bottom: 32px;
+    }
+
+    .description-section h3 {
+        font-family: 'Sora', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .short-desc {
+        background: var(--green-lite);
+        padding: 20px 24px;
+        border-radius: 20px;
+        margin-bottom: 24px;
+        border-left: 4px solid var(--green);
+    }
+
+    .short-desc p {
+        color: var(--text);
+        font-size: 1rem;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .full-description {
+        color: var(--sub);
+        line-height: 1.7;
+        font-size: 1rem;
+    }
+
+    /* Info Grid */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        background: var(--bg);
+        padding: 24px;
+        border-radius: 24px;
+        margin-bottom: 32px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .info-icon {
+        width: 44px;
+        height: 44px;
+        background: var(--green-lite);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+    .info-text {
+        flex: 1;
+    }
+
+    .info-label {
+        font-size: 12px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: var(--text);
+        font-size: 15px;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 32px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+        padding-top: 32px;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 28px;
+        border-radius: 40px;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+    }
+
+    .btn-primary {
+        background: var(--green);
+        color: white;
+        box-shadow: 0 2px 8px rgba(26, 107, 60, 0.3);
+    }
+
+    .btn-primary:hover {
+        background: #155d33;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(26, 107, 60, 0.4);
+    }
+
+    .btn-success {
+        background: var(--success);
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #0b9a5e;
+        transform: translateY(-2px);
+    }
+
+    /* Helpers Section */
+    .helpers-section {
+        background: var(--bg);
+        border-radius: 24px;
+        padding: 24px;
+        margin-bottom: 32px;
+    }
+
+    .helpers-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .helpers-header h3 {
+        font-family: 'Sora', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0;
+    }
+
+    .helpers-count {
+        background: var(--green);
+        color: white;
+        padding: 2px 10px;
+        border-radius: 40px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .helper-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .helper-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 14px 18px;
+        background: var(--white);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+    }
+
+    .helper-item:hover {
+        border-color: var(--green-ring);
+        transform: translateX(4px);
+    }
+
+    .helper-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .helper-avatar {
+        width: 40px;
+        height: 40px;
+        background: var(--green-lite);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+
+    .helper-name {
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .helper-email {
+        color: var(--green);
+        text-decoration: none;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .helper-email:hover {
+        text-decoration: underline;
+    }
+
+    /* Comments Section */
+    .comments-section {
+        background: var(--card);
+        border-radius: 24px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
+
+    .comments-header {
+        padding: 24px 28px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .comments-header h3 {
+        font-family: 'Sora', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .comment-form-container {
+        padding: 24px 28px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .comment-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .comment-textarea {
+        width: 100%;
+        padding: 16px;
+        border: 1.5px solid var(--border);
+        border-radius: 20px;
+        font-family: inherit;
+        font-size: 14px;
+        resize: vertical;
+        transition: all 0.2s;
+    }
+
+    .comment-textarea:focus {
+        outline: none;
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px var(--green-ring);
+    }
+
+    .comment-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .comment-item {
+        padding: 20px 28px;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.2s;
+    }
+
+    .comment-item:hover {
+        background: var(--green-lite);
+    }
+
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+
+    .comment-author {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .comment-avatar {
+        width: 36px;
+        height: 36px;
+        background: var(--green);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+    }
+
+    .comment-author-name {
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .comment-date {
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    .comment-content {
+        color: var(--sub);
+        line-height: 1.5;
+        margin-left: 46px;
+    }
+
+    .empty-comments {
+        text-align: center;
+        padding: 48px;
+        color: var(--muted);
+    }
+
+    .login-prompt {
+        background: var(--green-lite);
+        padding: 16px 24px;
+        border-radius: 20px;
+        text-align: center;
+    }
+
+    .login-prompt a {
+        color: var(--green);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    hr {
+        margin: 24px 0;
+        border: none;
+        border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 768px) {
+        .problem-detail-container {
+            padding: 16px;
+        }
+        .problem-content {
+            padding: 20px;
+        }
+        .hero-overlay h1 {
+            font-size: 1.5rem;
+        }
+        .hero-image {
+            height: 240px;
+        }
+        .action-buttons {
+            flex-direction: column;
+        }
+        .btn {
+            justify-content: center;
+        }
+        .helper-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .comment-content {
+            margin-left: 0;
+        }
+        .breadcrumbs {
+            margin: 16px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="problem-detail-container">
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs">
+        <a href="{% url 'home' %}"> Home</a> / 
+        <a href="{% url 'category_problems' problem.category.id %}">{{ problem.category.name }}</a> / 
+        <span>{{ problem.title|truncatechars:40 }}</span>
+    </div>
+
+    <!-- Main Problem Card - Modern Design -->
+    <div class="problem-card-modern">
+        <!-- Hero Section with or without image -->
+        <div class="problem-hero {% if problem.image %}has-image{% endif %}">
+            {% if problem.image %}
+                <img src="{{ problem.image.url }}" alt="{{ problem.title }}" class="hero-image">
+                <div class="hero-overlay">
+                    <h1>{{ problem.title }}</h1>
+                    <div class="hero-meta">
+                        <span><i class="fas fa-user"></i> {{ problem.author.get_full_name|default:problem.author.username }}</span>
+                        <span><i class="fas fa-folder"></i> {{ problem.category.name }}</span>
+                        <span><i class="far fa-calendar"></i> {{ problem.created_at|localtime|date:'d M Y, H:i' }}</span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="no-image-hero">
+                    <h1>{{ problem.title }}</h1>
+                    <div class="hero-meta">
+                        <span><i class="fas fa-user"></i> {{ problem.author.get_full_name|default:problem.author.username }}</span>
+                        <span><i class="fas fa-folder"></i> {{ problem.category.name }}</span>
+                        <span><i class="far fa-calendar"></i> {{ problem.created_at|localtime|date:'d M Y, H:i' }}</span>
+                    </div>
+                </div>
+            {% endif %}
+            
+            <!-- Status Badge -->
+            <div class="status-badge-large status-{{ problem.get_status_class|default:'pending'|lower|cut:' ' }}">
+                <i class="fas {% if problem.status == 'resolved' %}fa-check-circle{% elif problem.status == 'in_progress' %}fa-spinner fa-pulse{% else %}fa-clock{% endif %}"></i>
+                {{ problem.get_status_display }}
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="problem-content">
+            <!-- Short Description Highlight -->
+            <div class="short-desc">
+                <p><i class="fas fa-quote-left" style="color: var(--green); margin-right: 8px;"></i> {{ problem.short_description }}</p>
+            </div>
+
+            <!-- Full Description -->
+            <div class="description-section">
+                <h3><i class="fas fa-align-left"></i> Detailed Description</h3>
+                <div class="full-description">
+                    {{ problem.description|linebreaks }}
+                </div>
+            </div>
+
+            <!-- Info Grid -->
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-user-circle"></i></div>
+                    <div class="info-text">
+                        <div class="info-label">Reported by</div>
+                        <div class="info-value">{{ problem.author.get_full_name|default:problem.author.username }}</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-tag"></i></div>
+                    <div class="info-text">
+                        <div class="info-label">Category</div>
+                        <div class="info-value">{{ problem.category.name }}</div>
+                    </div>
+                </div>
+                {% if problem.location %}
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="info-text">
+                        <div class="info-label">Location</div>
+                        <div class="info-value">{{ problem.location }}</div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="info-item">
+                    <div class="info-icon"><i class="far fa-calendar-alt"></i></div>
+                    <div class="info-text">
+                        <div class="info-label">Created on</div>
+                        <div class="info-value">{{ problem.created_at|localtime|date:'d M Y, H:i' }}</div>
+                    </div>
+                </div>
+                {% if problem.updated_at != problem.created_at %}
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-edit"></i></div>
+                    <div class="info-text">
+                        <div class="info-label">Last updated</div>
+                        <div class="info-value">{{ problem.updated_at|localtime|date:'d M Y, H:i' }}</div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{% url 'i_can_solve' problem.id %}" class="btn btn-primary">
+                    <i class="fas fa-handshake"></i> I Can Help Solve This
+                </a>
+                {% if can_mark_solved %}
+                    <form method="POST" action="{% url 'mark_problem_solved' problem.id %}" class="inline-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check-circle"></i> Mark as Solved
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Helpers Section -->
+    {% if solvers %}
+    <div class="helpers-section">
+        <div class="helpers-header">
+            <h3><i class="fas fa-users"></i> Community Helpers</h3>
+            <span class="helpers-count">{{ solvers|length }}</span>
+        </div>
+        <ul class="helper-list">
+            {% for solver in solvers %}
+                <li class="helper-item">
+                    <div class="helper-info">
+                        <div class="helper-avatar">
+                            {{ solver.solver.username|first|upper }}
+                        </div>
+                        <div>
+                            <div class="helper-name">{{ solver.solver.get_full_name|default:solver.solver.username }}</div>
+                            <div class="helper-username" style="font-size: 12px; color: var(--muted);">@{{ solver.solver.username }}</div>
+                        </div>
+                    </div>
+                    <a class="helper-email" href="mailto:{{ solver.solver.email }}">
+                        <i class="fas fa-envelope"></i> {{ solver.solver.email }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+        <div class="comments-header">
+            <h3><i class="fas fa-comments"></i> Discussion ({{ comments.count }})</h3>
+        </div>
+
+        <div class="comment-form-container">
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'add_comment' problem.id %}" class="comment-form">
+                    {% csrf_token %}
+                    <textarea name="content" rows="4" required placeholder="Share your thoughts, suggestions, or ask questions..." class="comment-textarea"></textarea>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 24px;">
+                            <i class="fas fa-paper-plane"></i> Post Comment
+                        </button>
+                    </div>
+                </form>
+            {% else %}
+                <div class="login-prompt">
+                    <i class="fas fa-lock"></i> Please <a href="{% url 'login' %}?next={{ request.path }}">login</a> to join the discussion and help solve this problem.
+                </div>
+            {% endif %}
+        </div>
+
+        {% if comments %}
+            <ul class="comment-list">
+                {% for comment in comments %}
+                    <li class="comment-item">
+                        <div class="comment-header">
+                            <div class="comment-author">
+                                <div class="comment-avatar">
+                                    {{ comment.author.username|first|upper }}
+                                </div>
+                                <div>
+                                    <div class="comment-author-name">{{ comment.author.get_full_name|default:comment.author.username }}</div>
+                                </div>
+                            </div>
+                            <div class="comment-date">
+                                <i class="far fa-clock"></i> {{ comment.created_at|localtime|date:'d M Y, H:i' }}
+                            </div>
+                        </div>
+                        <div class="comment-content">
+                            {{ comment.content|linebreaks }}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="empty-comments">
+                <i class="fas fa-comment-dots" style="font-size: 48px; color: var(--muted); margin-bottom: 16px; display: block;"></i>
+                <p>No comments yet. Be the first to share your thoughts!</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

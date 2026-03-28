@@ -1,0 +1,62 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Crowd Helper{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    {% include 'base/header.html' %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'base/footer.html' %}
+
+    {% block extra_js %}{% endblock %}
+
+    <script>
+    function fetchHeaderNotifications() {
+        fetch('/accounts/dashboard/notifications/json/')
+            .then(r => r.json())
+            .then(data => {
+                const badge = document.getElementById('notif-badge');
+                const dropdownList = document.getElementById('notif-dropdown-list');
+                if (badge) {
+                    badge.textContent = data.unread_count || 0;
+                    badge.style.display = data.unread_count > 0 ? 'inline-block' : 'none';
+                }
+                if (dropdownList) {
+                    dropdownList.innerHTML = data.notifications.length ? data.notifications.map(n => {
+                        const readClass = n.is_read ? '' : 'unread';
+                        return `<li class="notif-item ${readClass}"><a href="/accounts/dashboard/notifications/${n.id}/">${n.message}</a></li>`;
+                    }).join('') : '<li class="notif-item">No new notifications</li>';
+                }
+            })
+            .catch(e => console.warn('Notification load failed', e));
+    }
+
+    function toggleNotifDropdown() {
+        const dropdown = document.getElementById('notif-dropdown');
+        if (dropdown) {
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const notifBtn = document.getElementById('notif-btn');
+        if (notifBtn) {
+            notifBtn.addEventListener('click', toggleNotifDropdown);
+        }
+        fetchHeaderNotifications();
+        setInterval(fetchHeaderNotifications, 15000);
+    });
+    </script>
+</body>
+</html>

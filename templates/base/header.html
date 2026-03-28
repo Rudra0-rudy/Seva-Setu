@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Seva-Setu | Modern Navbar</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green: #1a6b3c;
+            --green-mid: #22883f;
+            --green-lite: #e8f5ee;
+            --green-dark: #0f522e;
+            --green-ring: rgba(26, 107, 60, 0.18);
+            --white: #ffffff;
+            --bg: #f3f4f6;
+            --card: #ffffff;
+            --border: #e8eaed;
+            --text: #111827;
+            --sub: #6b7280;
+            --muted: #9ca3af;
+            --danger: #ef4444;
+            --danger-lite: #fee2e2;
+            --success: #10b981;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        /* =========================================================== */
+        /* MODERN NAVBAR DESIGN - Clean, with smooth hover effects */
+        /* =========================================================== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            z-index: 1000;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .navbar:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Logo Area */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            padding: 16px 0;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: scale(1.02);
+        }
+
+        .logo-img {
+            height: 38px;
+            width: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links li a {
+            display: flex;
+            align-items: center;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--sub);
+            text-decoration: none;
+            border-radius: 40px;
+            transition: var(--transition);
+            font-family: 'DM Sans', sans-serif;
+            position: relative;
+        }
+
+        /* Hover effect with underline animation */
+        .nav-links li a::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 70%;
+            height: 2px;
+            background: var(--green);
+            border-radius: 2px;
+            transition: transform 0.25s ease;
+        }
+
+        .nav-links li a:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .nav-links li a:hover {
+            background: var(--green-lite);
+            color: var(--green);
+            transform: translateY(-2px);
+        }
+
+        /* Active link indicator */
+        .nav-links li a.active {
+            background: var(--green);
+            color: white;
+            box-shadow: 0 4px 12px rgba(26, 107, 60, 0.25);
+        }
+
+        .nav-links li a.active::after {
+            display: none;
+        }
+
+        /* Auth Links Section */
+        .auth-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* User profile - Modern pill design */
+        .user-wrapper {
+            position: relative;
+        }
+
+        .user-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #1a6b3c 0%, #22883f 100%);
+            padding: 10px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            transition: all var(--transition);
+            cursor: pointer;
+            border: 1px solid rgba(26, 107, 60, 0.3);
+            box-shadow: 0 4px 15px rgba(26, 107, 60, 0.25);
+            font-weight: 600;
+        }
+
+        .user-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 107, 60, 0.35);
+            background: linear-gradient(135deg, #155d33 0%, #1a6b3c 100%);
+            border-color: rgba(26, 107, 60, 0.5);
+        }
+
+        .user-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(26, 107, 60, 0.2);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: black;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .user-name {
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: -0.3px;
+        }
+
+        .user-dropdown-icon {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .user-btn:hover .user-dropdown-icon {
+            color: white;
+            transform: rotate(180deg);
+        }
+
+        /* Dropdown Menu */
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 12px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 32px rgba(26, 107, 60, 0.15);
+            border: 1px solid rgba(26, 107, 60, 0.1);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.25s ease;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .user-wrapper:hover .user-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            margin: 4px 8px;
+        }
+
+        .dropdown-item:hover {
+            background: var(--green-lite);
+            color: var(--green);
+            transform: translateX(4px);
+        }
+
+        .dropdown-item i {
+            color: var(--green);
+            font-size: 16px;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 8px;
+        }
+
+        .logout-dropdown {
+            color: var(--danger);
+        }
+
+        .logout-dropdown:hover {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+
+        .logout-dropdown i {
+            color: var(--danger);
+        }
+
+        /* Login / Sign Up Buttons */
+        .auth-links > a {
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-links > a:first-child {
+            color: var(--green);
+            background: transparent;
+            border: 1.5px solid var(--border);
+        }
+
+        .auth-links > a:first-child::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--green-lite);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .auth-links > a:first-child:hover::before {
+            left: 0;
+        }
+
+        .auth-links > a:first-child:hover {
+            border-color: var(--green);
+            color: var(--green);
+            transform: translateY(-2px);
+        }
+
+        .auth-links > a:last-child {
+            background: var(--green);
+            color: white;
+            box-shadow: 0 2px 6px rgba(26, 107, 60, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-links > a:last-child::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .auth-links > a:last-child:hover::before {
+            left: 100%;
+        }
+
+        .auth-links > a:last-child:hover {
+            background: var(--green-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(26, 107, 60, 0.3);
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            background: transparent;
+            border: 1.5px solid var(--border);
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--danger);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'DM Sans', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logout-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--danger-lite);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .logout-btn:hover::before {
+            left: 0;
+        }
+
+        .logout-btn:hover {
+            border-color: var(--danger);
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text);
+            padding: 12px;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--green);
+            transform: scale(1.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .navbar {
+                padding: 0 24px;
+            }
+            
+            .nav-links {
+                gap: 4px;
+            }
+            
+            .nav-links li a {
+                padding: 8px 14px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(16px);
+                flex-direction: column;
+                align-items: stretch;
+                padding: 16px 24px;
+                gap: 8px;
+                border-bottom: 1px solid var(--border);
+                box-shadow: var(--shadow-md);
+                transform: translateY(-120%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .nav-links li a {
+                padding: 12px 16px;
+                justify-content: flex-start;
+                font-size: 1rem;
+            }
+
+            .nav-links li a::after {
+                display: none;
+            }
+
+            .navbar {
+                padding: 8px 20px;
+            }
+            
+            .logo-img {
+                height: 32px;
+            }
+            
+            .logo-text {
+                font-size: 1.3rem;
+            }
+
+            .user-dropdown {
+                position: static;
+                margin-top: 8px;
+                box-shadow: none;
+                border: none;
+                background: var(--bg);
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                display: none;
+            }
+
+            .user-wrapper.active .user-dropdown {
+                display: block;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 8px 16px;
+            }
+            
+            .logo-text {
+                font-size: 1.2rem;
+            }
+            
+            .logo-img {
+                height: 28px;
+            }
+            
+            .auth-links > a, .logout-btn, .user-btn {
+                padding: 6px 14px;
+                font-size: 0.8rem;
+            }
+            
+            .user-name {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Scroll effect */
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 4px 40px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar.scrolled {
+                padding: 4px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- MODERN NAVBAR WITH IMPROVED USER DROPDOWN -->
+    <nav class="navbar" id="mainNavbar">
+        <!-- Logo -->
+        <a href="/" class="logo">
+            <span class="logo-text">SevaSetu</span>
+        </a>
+
+        <!-- Mobile Hamburger Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Navigation Links -->
+        <ul class="nav-links" id="navLinks">
+            <li><a href="{% url 'home' %}" class="nav-item" data-page="home">Home</a></li>
+            <li><a href="{% url 'dashboard' %}" class="nav-item" data-page="dashboard">Dashboard</a></li>
+            <li><a href="#analytics" class="nav-item" data-page="analytics">Analytics</a></li>
+            <li><a href="#logs" class="nav-item" data-page="logs">History Logs</a></li>
+            <li><a href="#about" class="nav-item" data-page="about">About</a></li>
+        </ul>
+
+        <!-- Authentication Section -->
+        <div class="auth-links">
+            {% if user.is_authenticated %}
+                <div class="user-wrapper">
+                    <button class="user-btn" id="userBtn">
+                        <div class="user-avatar">{{ user.username|first|upper }}</div>
+                        <span class="user-name">{{ user.username }}</span>
+                        <i class="fas fa-chevron-down user-dropdown-icon"></i>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="{% url 'dashboard' %}" class="dropdown-item">
+                            <i class="fas fa-chart-line"></i> Dashboard
+                        </a>
+                        <a href="{% url 'myproblems' %}" class="dropdown-item">
+                            <i class="fas fa-tasks"></i> My Problems
+                        </a>
+                        {% comment %}
+                        <!-- Profile link - Uncomment when you add the profile URL in your Django app -->
+                        <a href="{% url 'profile' %}" class="dropdown-item">
+                            <i class="fas fa-user-circle"></i> Profile Settings
+                        </a>
+                        {% endcomment %}
+                        <div class="dropdown-divider"></div>
+                        <form method="post" action="{% url 'logout' %}" style="margin: 0;">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item logout-dropdown" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer;">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="login-link">Login</a>
+                <a href="{% url 'signup' %}" class="signup-link">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <script>
+        // Mobile menu toggle functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        if (mobileMenuBtn && navLinks) {
+            mobileMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                navLinks.classList.toggle('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                if (navLinks.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            const navItems = navLinks.querySelectorAll('a');
+            navItems.forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            });
+        }
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (navLinks && mobileMenuBtn && navLinks.classList.contains('active')) {
+                if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            }
+        });
+        
+        // Mobile dropdown toggle
+        const userWrapper = document.querySelector('.user-wrapper');
+        const userBtn = document.getElementById('userBtn');
+        
+        if (userWrapper && window.innerWidth <= 768) {
+            userBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userWrapper.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', () => {
+                userWrapper.classList.remove('active');
+            });
+        }
+        
+        // Scroll effect
+        const navbar = document.getElementById('mainNavbar');
+        if (navbar) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+        }
+        
+        // Active link highlighting
+        function setActiveNavLink() {
+            const currentPath = window.location.pathname;
+            const currentHash = window.location.hash;
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('href');
+                
+                if (href === currentPath) {
+                    link.classList.add('active');
+                } else if (currentHash && href === currentHash) {
+                    link.classList.add('active');
+                } else if (href === '#analytics' && currentHash === '#analytics') {
+                    link.classList.add('active');
+                } else if (href === '#logs' && currentHash === '#logs') {
+                    link.classList.add('active');
+                } else if (href === '#about' && currentHash === '#about') {
+                    link.classList.add('active');
+                }
+            });
+            
+            if (currentPath === '/' || currentPath === '/home/' || currentPath === '/home' || currentPath === '') {
+                const homeLink = document.querySelector('.nav-item[data-page="home"]');
+                if (homeLink) homeLink.classList.add('active');
+            }
+            if (currentPath.includes('dashboard')) {
+                const dashboardLink = document.querySelector('.nav-item[data-page="dashboard"]');
+                if (dashboardLink) dashboardLink.classList.add('active');
+            }
+        }
+        
+        setActiveNavLink();
+        window.addEventListener('hashchange', setActiveNavLink);
+        window.addEventListener('popstate', setActiveNavLink);
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                if (targetId && targetId !== '#') {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        history.pushState(null, null, targetId);
+                        setActiveNavLink();
+                    }
+                }
+            });
+        });
+        
+        // Handle window resize for mobile dropdown
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && userWrapper) {
+                userWrapper.classList.remove('active');
+            }
+            if (window.innerWidth > 768 && navLinks && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                const icon = mobileMenuBtn?.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

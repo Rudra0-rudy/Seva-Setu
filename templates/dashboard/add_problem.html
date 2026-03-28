@@ -1,0 +1,704 @@
+{% load static %}
+{% load tz %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Problem | CrowdHelper</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --green:      #1a6b3c;
+            --green-mid:  #22883f;
+            --green-lite: #e8f5ee;
+            --green-ring: rgba(26,107,60,0.18);
+            --white:      #ffffff;
+            --bg:         #f3f4f6;
+            --card:       #ffffff;
+            --border:     #e8eaed;
+            --text:       #111827;
+            --sub:        #6b7280;
+            --muted:      #9ca3af;
+            --danger:     #ef4444;
+            --warn:       #f59e0b;
+            --info:       #3b82f6;
+            --radius:     16px;
+            --shadow:     0 2px 12px rgba(0,0,0,0.07);
+            --shadow-lg:  0 8px 32px rgba(0,0,0,0.10);
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── LAYOUT ── */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 260px;
+            min-height: 100vh;
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 28px 18px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 36px;
+            padding: 0 8px;
+        }
+
+        .sidebar-logo-icon {
+            width: 36px; height: 36px;
+            background: var(--green);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+
+        .sidebar-logo-text {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--text);
+        }
+
+        /* profile */
+        .sidebar-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 12px 24px;
+            border-radius: var(--radius);
+            background: var(--green-lite);
+            margin-bottom: 28px;
+        }
+
+        .avatar-ring {
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 3px solid var(--green);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-username {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text);
+        }
+
+        .sidebar-role {
+            font-size: 12px;
+            color: var(--sub);
+            margin-top: 3px;
+        }
+
+        /* nav */
+        .nav-section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 0 10px;
+            margin-bottom: 8px;
+            margin-top: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--sub);
+            transition: all 0.2s ease;
+            margin-bottom: 3px;
+        }
+
+        .nav-link:hover {
+            background: var(--green-lite);
+            color: var(--green);
+        }
+
+        .nav-link.active {
+            background: var(--green);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .nav-link .icon { font-size: 16px; }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--green);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 20px;
+        }
+
+        .nav-link.active .nav-badge {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .nav-link.logout-link {
+            color: var(--danger);
+            margin-top: 8px;
+        }
+
+        .nav-link.logout-link:hover {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* sidebar bottom */
+        .sidebar-download {
+            margin-top: auto;
+            background: var(--green);
+            border-radius: 14px;
+            padding: 18px 16px;
+            color: white;
+        }
+
+        .sidebar-download strong {
+            font-family: 'Sora', sans-serif;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-download p {
+            font-size: 12px;
+            opacity: 0.75;
+            margin-bottom: 12px;
+        }
+
+        /* ── MAIN ── */
+        .main {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .search-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 9px 16px;
+            width: 280px;
+        }
+
+        .search-wrap input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 14px;
+            color: var(--text);
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .search-wrap input::placeholder { color: var(--muted); }
+        .search-icon { font-size: 15px; }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-icon-btn {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        .topbar-icon-btn:hover { background: var(--green-lite); }
+
+        .notif-badge {
+            position: absolute;
+            top: -2px; right: -2px;
+            width: 16px; height: 16px;
+            background: var(--danger);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid white;
+        }
+
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topbar-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--green-lite);
+            border: 2px solid var(--green);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+
+        .topbar-user-info strong {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            display: block;
+        }
+
+        .topbar-user-info span {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* ── CONTENT ── */
+        .content {
+            padding: 28px 32px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* page header */
+        .page-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .page-header p {
+            color: var(--sub);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--green);
+            color: white;
+            border: none;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover { background: #155d33; }
+
+        .btn-outline {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--white);
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover { border-color: var(--green); color: var(--green); }
+
+        /* ── FORM SECTION (NEW) ── */
+        .form-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .dash-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Style Django form fields to match dashboard */
+        .dash-form p {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .dash-form label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: 0.3px;
+        }
+
+        .dash-form input,
+        .dash-form select,
+        .dash-form textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: var(--white);
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .dash-form input:focus,
+        .dash-form select:focus,
+        .dash-form textarea:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px var(--green-ring);
+        }
+
+        .dash-form textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* file input styling */
+        .dash-form input[type="file"] {
+            padding: 10px 12px;
+            background: var(--bg);
+            border: 1px dashed var(--border);
+            cursor: pointer;
+        }
+
+        .dash-form input[type="file"]:hover {
+            border-color: var(--green);
+            background: var(--green-lite);
+        }
+
+        /* help text & error messages */
+        .helptext {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .errorlist {
+            list-style: none;
+            color: var(--danger);
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .dash-btn {
+            background: var(--green);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 14px 24px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Sora', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .dash-btn:hover {
+            background: #155d33;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Responsive */
+        @media (max-width: 820px) {
+            .sidebar { display: none; }
+            .content { padding: 20px; }
+            .form-card { padding: 24px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- ── SIDEBAR (identical to dashboard) ── -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            
+            <span class="sidebar-logo-text">SevaSetu.</span>
+        </div>
+
+        <div class="sidebar-profile">
+            <div class="avatar-ring"><svg xmlns="http://www.w3.org/2000/svg" height="34px" viewBox="0 -960 960 960" width="34px" fill="#000000"><path d="M367-527q-47-47-47-113t47-113q47-47 113-47t113 47q47 47 47 113t-47 113q-47 47-113 47t-113-47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm296.5-343.5Q560-607 560-640t-23.5-56.5Q513-720 480-720t-56.5 23.5Q400-673 400-640t23.5 56.5Q447-560 480-560t56.5-23.5ZM480-640Zm0 400Z"/></svg></div>
+            <div class="sidebar-username">{{ request.user.username }}</div>
+            <div class="sidebar-role">Community Member</div>
+        </div>
+
+        <div class="nav-section-label">Menu</div>
+
+        <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+            <span class="icon"><i class="fas fa-home"></i></span> Home
+        </a>
+        <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+            <span class="icon"><i class="fas fa-chart-bar"></i></span> Dashboard
+        </a>
+        <a href="{% url 'solved_issues' %}" class="nav-link {% if request.resolver_match.url_name == 'solved_issues' %}active{% endif %}">
+            <span class="icon"><i class="fas fa-check-circle"></i></span> Solved Issues
+        </a>
+        <a href="{% url 'about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+            <span class="icon"><i class="fas fa-info-circle"></i></span> About
+        </a>
+        <a href="{% url 'myproblems' %}" class="nav-link {% if request.resolver_match.url_name == 'myproblems' %}active{% endif %}">
+            <span class="icon"><i class="fas fa-envelope"></i></span> My Problems
+        </a>
+
+        <div class="nav-section-label" style="margin-top:16px;">General</div>
+
+        <a href="{% url 'logout' %}" class="nav-link logout-link"
+           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <span class="icon"><i class="fas fa-sign-out-alt"></i></span> Logout
+        </a>
+
+        <form id="logout-form" method="POST" action="{% url 'logout' %}" style="display:none;">
+            {% csrf_token %}
+        </form>
+
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <div class="main">
+
+        <!-- TOPBAR (identical to dashboard) -->
+        <div class="topbar">
+            <div class="search-wrap">
+                <span class="search-icon"><i class="fas fa-search"></i></span>
+                <input type="text" placeholder="Search tasks, problems...">
+            </div>
+
+            <div class="topbar-right">
+                <!-- notification bell -->
+                <div style="position:relative;">
+                    <button class="topbar-icon-btn" id="dashboard-notif-btn" aria-label="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span id="unread-count" class="notif-badge">{{ unread_notifications_count }}</span>
+                    </button>
+
+                    <div id="notif-popup" style="display:none; position:absolute; right:0; top:48px;">
+                        <ul id="notification-list" class="notification-list" style="max-height:280px; overflow-y:auto;">
+                            {% if notifications %}
+                                {% for n in notifications %}
+                                <li class="notification-item {% if not n.is_read %}unread{% endif %}">
+                                    {% if n.problem %}
+                                        <a href="{% url 'problem_detail' n.problem.id %}">{{ n.problem.title|default:n.message }}</a>
+                                    {% else %}
+                                        <a href="{% url 'notification_detail' n.id %}">{{ n.message }}</a>
+                                    {% endif %}
+                                    <br><small>{{ n.created_at|localtime|date:'d M Y, H:i' }}</small>
+                                </li>
+                                {% endfor %}
+                            {% else %}
+                                <li class="notification-item">No notifications yet</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="topbar-user">
+                    <div class="topbar-avatar"><i class="fas fa-user"></i></div>
+                    <div class="topbar-user-info">
+                        <strong>{{ request.user.username }}</strong>
+                        <span> Community Member</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENT: Add New Problem Form -->
+        <div class="content">
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1>Add New Problem</h1>
+                    <p>Submit a new problem to the platform — help the community grow.</p>
+                </div>
+                <div class="header-actions">
+                    <a href="{% url 'myproblems' %}" class="btn-outline">← Back to My Problems</a>
+                </div>
+            </div>
+
+            <!-- Form Card -->
+            <div class="form-card">
+                <form method="POST" enctype="multipart/form-data" class="dash-form">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                        <p>
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.help_text %}
+                                <span class="helptext">{{ field.help_text }}</span>
+                            {% endif %}
+                            {% if field.errors %}
+                                <ul class="errorlist">
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </p>
+                    {% endfor %}
+                    
+                    <button type="submit" class="dash-btn">➕ Submit Problem</button>
+                </form>
+            </div>
+
+        </div><!-- /content -->
+
+        <!-- FOOTER (same as dashboard) -->
+        {% include '../base/footer.html' %}
+
+    </div><!-- /main -->
+
+</div><!-- /layout -->
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+// Notification popup logic (same as dashboard for consistency)
+function toggleNotificationPopup() {
+    const popup = document.getElementById('notif-popup');
+    if (!popup) return;
+    popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+}
+
+function refreshNotifications() {
+    fetch("{% url 'notifications_json' %}")
+        .then(res => res.json())
+        .then(data => {
+            const badge = document.getElementById('unread-count');
+            const list  = document.getElementById('notification-list');
+
+            if (badge) {
+                badge.textContent = data.unread_count || 0;
+                badge.style.display = data.unread_count > 0 ? 'flex' : 'none';
+            }
+
+            if (list) {
+                if (!data.notifications.length) {
+                    list.innerHTML = '<li class="notification-item">No notifications yet</li>';
+                    return;
+                }
+                list.innerHTML = data.notifications.map(n => {
+                    const cls  = n.is_read ? '' : 'unread';
+                    const link = n.problem_id ? `/problem/${n.problem_id}/` : `/accounts/dashboard/notifications/${n.id}/`;
+                    const title = n.problem_title || n.message;
+                    return `<li class="notification-item ${cls}"><a href="${link}">${title}</a><br><small>${n.created_at}</small></li>`;
+                }).join('');
+            }
+        })
+        .catch(err => console.error('Notification fetch failed', err));
+}
+
+setInterval(refreshNotifications, 15000);
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('dashboard-notif-btn');
+    if (btn) btn.addEventListener('click', toggleNotificationPopup);
+    refreshNotifications();
+
+    // Close popup when clicking outside
+    document.addEventListener('click', e => {
+        const popup = document.getElementById('notif-popup');
+        const btn   = document.getElementById('dashboard-notif-btn');
+        if (popup && btn && !btn.contains(e.target) && !popup.contains(e.target)) {
+            popup.style.display = 'none';
+        }
+    });
+});
+</script>
+
+</body>
+</html>
